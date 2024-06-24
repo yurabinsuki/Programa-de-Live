@@ -63,7 +63,6 @@ public class Streamer extends User{
     public void chat(){
         if(this.live == true){
 
-            int tempoDeLive = 0;
             String comentarios[] = {
                 "POGGERS",
                 "Nem fodendo",
@@ -106,7 +105,9 @@ public class Streamer extends User{
     @Override
     public String toString() {
     
-        return "Streamer: " + this.nickname + "\n Número de inscritos: " + totalInscritos + "\n Total de horas Stremadas: " + horasStreamadas;
+        return "Streamer: " + this.nickname + 
+        "\n Número de inscritos: " + this.totalInscritos + 
+        "\n Total de horas Stremadas: " + this.horasStreamadas;
     }
     
 }
