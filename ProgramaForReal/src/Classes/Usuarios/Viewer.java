@@ -15,6 +15,8 @@ public class Viewer extends User{
     }
 
 
+
+
     //GETTERs e SETTERs
     public List<Streamer> getCanaisInscritos() {
         return canaisInscritos;

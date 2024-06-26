@@ -14,6 +14,26 @@ public class Plataforma {
     public static List<Viewer> viewers = new ArrayList<>();
     public static List<Streamer> streamers = new ArrayList<>();
 
+
+    public static void addContas(){
+        Streamer pelfs = new Streamer(true, "eoselfs@tmail.com", "segredo", "Pelfs", 1500000, 10000, viewers);
+        Streamer bitcel = new Streamer(false, "bitcel@tmail.com", "segredo", "Bitcel", 2000000, 16000, viewers);
+        Streamer aaronzuka = new Streamer(true, "aaronzuka69@tmail.com", "segredo", "Aaronzuka", 3000000, 12000, viewers);
+        Streamer notathingshow = new Streamer(false, "notalive@tmail.com", "segredo", "NotaThingShow", 29, 130, viewers);
+        Streamer molhodevinho = new Streamer(true, "vinesauce@tmail.com", "segredo", "Molho", 606000, 25000, viewers);
+    
+        streamers.add(pelfs);
+        streamers.add(bitcel);
+        streamers.add(aaronzuka);
+        streamers.add(notathingshow);
+        streamers.add(molhodevinho);
+    
+        Viewer teste = new Viewer("teste@tmail.com", "a", "a", streamers);
+        viewers.add(teste);
+
+    }
+
+
     public static String getInputString(String texto) {
         Scanner leitor = new Scanner(System.in);
         System.out.print(texto);
@@ -27,7 +47,6 @@ public class Plataforma {
         String valorDigitado = leitor.nextLine();
 
         return Integer.parseInt(valorDigitado);
-        
     }
 
     public static void inicio(){
@@ -95,6 +114,7 @@ public class Plataforma {
 
         if (!usuarioEncontrado) {
             System.out.println("# Nome de usuário ou senha incorretos. #");
+            inicio();
         }
     }
 
@@ -186,20 +206,52 @@ public class Plataforma {
         System.out.println("########################################");
         System.out.println("# Home do Viewer " + viewer.getNickname());
         System.out.println("# 1. Ver canais Ao vivo #");
-        System.out.println("# 2. Canais inscritos #");
-        System.out.println("# 3. Buscar canais #");
-        System.out.println("# 4. Configurações #");
-        System.out.println("# 0. Sair #");
+        System.out.println("# 2. Canais inscritos   #");
+        System.out.println("# 3. Buscar canais      #");
+        System.out.println("# 4. Configurações      #");
+        System.out.println("# 0. Sair               #");
         System.out.println("########################################");  
         System.out.println("");
 
+        int resp = getInputInt("Digite: ");
+
+        switch (resp) {
+            case 1:
+                mostrarCanaisAoVivo();
+                String nick = getInputString("Digite o canal que deseja assistir: ");
+                assistirLive(nick);
+                break;
+        
+            default:
+                break;
+        }
     }
+
+    public static void mostrarCanaisAoVivo(){
+        for(Streamer streamer : streamers){
+            if (streamer.getLive() == true) {
+                System.out.println(streamer.getNickname());
+            }
+        }
+    }
+
+    public static void assistirLive(String nick){
+        for(Streamer streamer : streamers){
+            if (streamer.getNickname().equals(nick)) {
+                System.out.println("# Você está assistindo ao canal: " + streamer.getNickname());
+                Chat.chat(streamer);
+            }
+        }
+    }
+
+
 
     public static void homeStreamer(Streamer streamer){
         System.out.println("Home do Streamaer");
         System.out.println(streamer);
 
     }
+
 
     
 

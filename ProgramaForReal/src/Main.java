@@ -1,4 +1,5 @@
 import Classes.Interativo.Plataforma;
+import Classes.Usuarios.Streamer;
 
 public class Main {
 
@@ -11,7 +12,9 @@ public class Main {
 
     public static void main(String[] args) throws Exception {
 
+        Plataforma.addContas();
         Plataforma.inicio();
+
 
     }
 }
