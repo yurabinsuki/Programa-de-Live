@@ -1,6 +1,6 @@
-package Classes.Interativo;
+package model.Interativo;
 
 public interface Config {
     void editarConta();
-    
+
 }

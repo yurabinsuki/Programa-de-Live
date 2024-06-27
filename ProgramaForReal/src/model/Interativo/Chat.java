@@ -1,15 +1,21 @@
-package Classes.Interativo;
+package model.Interativo;
 
 import java.util.Random;
+import java.util.Scanner;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import Classes.Usuarios.Streamer;
+import model.Usuarios.Streamer;
+import model.Usuarios.Viewer;
 
 public class Chat {
  
-        public static void chat(Streamer streamer){
+        public static void chat(Streamer streamer, Viewer viewer){
+            Scanner leitor = new Scanner(System.in);
+            boolean rodarChat = true;
+            while (rodarChat) {
+            
         if(streamer.getLive() == true){
 
             String[] randomUser = {
@@ -39,7 +45,6 @@ public class Chat {
                 "\u001B[91mvolcanomancer: \u001B[0m",    // Bright Red
                 "\u001B[92mwildtracker: \u001B[0m"       // Bright Green
             };
-            
             String[] comentarios = {
                 "Inacreditável",
                 "GG",
@@ -90,21 +95,41 @@ public class Chat {
 
             ScheduledExecutorService cronometro = Executors.newScheduledThreadPool(1);
 
-            Runnable task = () -> {
-                Random random = new Random();
-                int userIndex = random.nextInt(randomUser.length);
-                int commentIndex = random.nextInt(comentarios.length);
-                String user = randomUser[userIndex];
-                String comment = comentarios[commentIndex];
-    
-                // Imprime o comentário formatado
-                System.out.println(user + comment);
-            };
-    
-            // Inicia a tarefa com um delay inicial de 0 segundos e repetição a cada 5 segundos
-            cronometro.scheduleAtFixedRate(task, 1, 5, TimeUnit.SECONDS);
+             // Thread para capturar a entrada do usuário sem bloquear o cronômetro
+        Thread inputThread = new Thread(() -> {
+            while (true) {
+                String userInput = leitor.nextLine();
+                System.out.println(viewer.getNickname() + ": " + userInput);
+                if (userInput.equals("!sub")) {
+                    Plataforma.sub(viewer, streamer);
+                }
+                if(userInput.equals("!sair")) {
+                    Plataforma.sair(viewer);
+                    
+                }
+
+            }
+        });
+
+        // Iniciar a thread de captura de entrada do usuário
+        inputThread.setDaemon(true);
+        inputThread.start();
+
+        // Tarefa que será executada a cada 5 segundos
+        Runnable task = () -> {
+            Random random = new Random();
+            int userIndex = random.nextInt(randomUser.length);
+            int commentIndex = random.nextInt(comentarios.length);
+            String user = randomUser[userIndex];
+            String comment = comentarios[commentIndex];
+
+            System.out.println(user + comment);
+        };
+
+        // Agendando a tarefa para ser executada periodicamente
+        cronometro.scheduleAtFixedRate(task, 1, 5, TimeUnit.SECONDS);
             
         }
-    
+        }
     }
 }
