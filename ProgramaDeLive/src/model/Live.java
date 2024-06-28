@@ -25,7 +25,7 @@ public class Live {
                 break;
         }
         try {
-            String caminhoVod = "src/model/Backup/vodSalvo.obj";
+            String caminhoVod = "src/model/Backup/vodSalvo.txt";
         SalvarObjeto.salvarVod(novoVod, caminhoVod);
             
         } catch (Exception e) {

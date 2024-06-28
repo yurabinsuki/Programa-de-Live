@@ -42,7 +42,7 @@ public class PlataformaView {
         System.out.println("# Home do Viewer " + viewer.getNickname());
         System.out.println("# 1. Ver canais Ao vivo #");
         System.out.println("# 2. Canais inscritos   #");
-        System.out.println("# 3. Buscar canais      #");
+        System.out.println("# 3. Mostrar canais     #");
         System.out.println("# 4. Configurações      #");
         System.out.println("# 0. Sair               #");
         System.out.println("\n########################################\n");  

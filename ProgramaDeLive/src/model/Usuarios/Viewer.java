@@ -30,7 +30,7 @@ public class Viewer extends User implements Serializable{
     @Override
     public String toString() {
         
-        String exibir = "\n# Usuário: " + this.nickname + "\n Canais inscritos: ";
+        String exibir = "\n# Usuário: " + this.nickname + "\n#E-mail: " + this.email + "\n#~~~~~~~~~~~~~~~#\n" + "Canais inscritos: \n";
 
         if(this.canaisInscritos.size() == 0) {
             return exibir = "# Usuário: " + this.nickname + "\n Inscrito em nenhum canal :( #";
@@ -39,13 +39,13 @@ public class Viewer extends User implements Serializable{
 
         for(int i = 0; i < canaisInscritos.size(); i++){
             Streamer streamer = canaisInscritos.get(i);
-            exibir += "\n[" + (i+1) + "]" + streamer.getNickname();
+            exibir += " # " + streamer.getNickname() + " ";
 
             if(i < canaisInscritos.size() - 1) {
                 exibir += "\n";
             }
         }
-        exibir += "\n";
+        exibir += "\n#~~~~~~~~~~~~~~~#\n";
         return exibir;
     }
 

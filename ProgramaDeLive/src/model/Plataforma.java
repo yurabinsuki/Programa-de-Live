@@ -9,21 +9,23 @@ import view.PlataformaView;
 
 import java.util.List;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 
 public class Plataforma {
 
     // Constantes
-    private static final String VIEWER_FILE_PATH = "src/model/Backup/viewerSalvo.obj";
-    private static final String STREAMER_FILE_PATH = "src/model/Backup/streamerSalvo.obj";
-    private static final String VOD_FILE_PATH = "src/model/Backup/vodSalvo.obj";
+    private static final String VIEWER_FILE_PATH = "src/model/Backup/viewerSalvo.txt";
+    private static final String STREAMER_FILE_PATH = "src/model/Backup/streamerSalvo.txt";
+    private static final String VOD_FILE_PATH = "src/model/Backup/vodSalvo.txt";
 
     // Listas de objetos
     public static List<Viewer> viewers = new ArrayList<>();
     public static List<Streamer> streamers = new ArrayList<>();
+
     public static List<Vod> vods = new ArrayList<>();
     public static List<Vod> vodJogos = new ArrayList<>();
     public static List<Vod> vodConversa = new ArrayList<>();
@@ -189,11 +191,14 @@ public class Plataforma {
     }
 
     // Buscar canais
-    public static void buscarCanais(Viewer viewer) {
-        streamers.forEach(streamer -> {
-            String status = streamer.getLive() ? "Canais em live: " : "Canais OffStream: ";
-            System.out.println("# " + status + streamer.getNickname());
-        });
+    public static void mostrarCanais(Viewer viewer) {
+        System.out.println("\n### Canais Disponíveis ###");
+        int i = 1;
+        for (Streamer streamer : streamers) {
+            String status = streamer.getLive() ? "[Em live] " : "[Offline] ";
+            System.out.println(i + ". " + status + streamer.getNickname());
+            i++;
+        }
         PlataformaView.homeViewer(viewer);
     }
 
@@ -244,52 +249,113 @@ public class Plataforma {
         vods.add(vod);
     }
 
-    // Reviver objetos
-    public static Streamer reviverStreamer(String caminho) {
-        return (Streamer) reviverObjeto(caminho, "Streamer");
+      // REVIVER A TODOS (ainda não reviveu....)
+    public static void salvarDados() {
+        salvarViewers();
+        salvarStreamers();
+        salvarVods();
     }
 
-    public static Viewer reviverViewer(String caminho) {
-        return (Viewer) reviverObjeto(caminho, "Viewer");
+    private static void salvarViewers() {
+        try (FileOutputStream fileOut = new FileOutputStream(VIEWER_FILE_PATH);
+             ObjectOutputStream objectOut = new ObjectOutputStream(fileOut)) {
+
+            for (Viewer viewer : viewers) {
+                objectOut.writeObject(viewer);
+            }
+
+            System.out.println("## Viewers salvos com sucesso ##");
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
-    public static Vod reviverVod(String caminho) {
-        return (Vod) reviverObjeto(caminho, "Vod");
+    private static void salvarStreamers() {
+        try (FileOutputStream fileOut = new FileOutputStream(STREAMER_FILE_PATH);
+             ObjectOutputStream objectOut = new ObjectOutputStream(fileOut)) {
+
+            for (Streamer streamer : streamers) {
+                objectOut.writeObject(streamer);
+            }
+
+            System.out.println("## Streamers salvos com sucesso ##");
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
-    private static Object reviverObjeto(String caminho, String tipo) {
-        try (FileInputStream fileIn = new FileInputStream(caminho);
+    private static void salvarVods() {
+        try (FileOutputStream fileOut = new FileOutputStream(VOD_FILE_PATH);
+             ObjectOutputStream objectOut = new ObjectOutputStream(fileOut)) {
+
+            for (Vod vod : vods) {
+                objectOut.writeObject(vod);
+            }
+
+            System.out.println("## Vods salvos com sucesso ##");
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    public static void recuperarDados() {
+        recuperarViewers();
+        recuperarStreamers();
+        recuperarVods();
+    }
+
+    private static void recuperarViewers() {
+        try (FileInputStream fileIn = new FileInputStream(VIEWER_FILE_PATH);
              ObjectInputStream objectIn = new ObjectInputStream(fileIn)) {
-            Object objetoRevivido = objectIn.readObject();
-            System.out.println("\n# " + tipo + " revivido com sucesso de " + caminho + " #\n");
-            return objetoRevivido;
-        } catch (FileNotFoundException e) {
-            System.err.println("Arquivo não encontrado: " + caminho);
+
+            viewers.clear();
+            while (fileIn.available() > 0) {
+                Viewer viewer = (Viewer) objectIn.readObject();
+                viewers.add(viewer);
+            }
+
+            System.out.println("## Viewers recuperados com sucesso ##");
+
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
-            System.out.println("# Não deu pra reviver #");
         }
-        return null;
     }
 
-    public static void reviverContas() {
-        System.out.println("#######################");
-        Streamer streamerRevivido = reviverStreamer(STREAMER_FILE_PATH);
-        Viewer viewerRevivido = reviverViewer(VIEWER_FILE_PATH);
-        Vod vodRevivido = reviverVod(VOD_FILE_PATH);
+    private static void recuperarStreamers() {
+        try (FileInputStream fileIn = new FileInputStream(STREAMER_FILE_PATH);
+             ObjectInputStream objectIn = new ObjectInputStream(fileIn)) {
 
-        if (streamerRevivido != null) {
-            System.out.println("# Revivido: " + streamerRevivido.getNickname());
+            streamers.clear();
+            while (fileIn.available() > 0) {
+                Streamer streamer = (Streamer) objectIn.readObject();
+                streamers.add(streamer);
+            }
+
+            System.out.println("## Streamers recuperados com sucesso ##");
+
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
         }
+    }
 
-        if (viewerRevivido != null) {
-            System.out.println("# Revivido: " + viewerRevivido.getNickname());
+    private static void recuperarVods() {
+        try (FileInputStream fileIn = new FileInputStream(VOD_FILE_PATH);
+             ObjectInputStream objectIn = new ObjectInputStream(fileIn)) {
+
+            vods.clear();
+            while (fileIn.available() > 0) {
+                Vod vod = (Vod) objectIn.readObject();
+                vods.add(vod);
+            }
+
+            System.out.println("## Vods recuperados com sucesso ##");
+
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
         }
-
-        if (vodRevivido != null) {
-            System.out.println("# Revivido: " + vodRevivido);
-        }
-
-        PlataformaView.inicioView();
     }
 }

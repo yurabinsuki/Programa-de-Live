@@ -1,17 +1,17 @@
 package model.Usuarios;
-import java.util.List;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.io.Serializable;
 import model.User;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-
-public class Streamer extends User implements Serializable{
+public class Streamer extends User implements Serializable {
 
     private boolean live;
     private int totalInscritos;
     private List<Viewer> inscritos;
 
+    // Construtor
     public Streamer(boolean live, String email, String senha, String nickname, int totalInscritos, List<Viewer> inscritos) {
         super(email, senha, nickname);
         this.live = live;
@@ -19,23 +19,26 @@ public class Streamer extends User implements Serializable{
         this.inscritos = (inscritos == null) ? new ArrayList<>() : inscritos;
     }
 
-
-    public void exibirInscritos(){
-        for(Viewer inscrito : inscritos){
+    // Método para exibir inscritos
+    public void exibirInscritos() {
+        for (Viewer inscrito : inscritos) {
             System.out.println(inscrito.getNickname());
         }
     }
 
-    public void removerUmInscrito(){
-        this.totalInscritos--;
+    // Métodos para manipular inscritos
+    public void removerUmInscrito() {
+        if (this.totalInscritos > 0) {
+            this.totalInscritos--;
+        }
     }
 
-    public void adicionarUmIscrito(){
+    public void adicionarUmIscrito() {
         this.totalInscritos++;
     }
 
-    //Getters e Setters
-    public boolean getLive(){
+    // Getters e Setters
+    public boolean getLive() {
         return live;
     }
 
@@ -47,22 +50,17 @@ public class Streamer extends User implements Serializable{
         return totalInscritos;
     }
 
-
     public List<Viewer> getInscritos() {
         return inscritos;
     }
 
-
-    public void setInscritos(int totalInscritos) {
-        this.totalInscritos = totalInscritos;
+    public void setInscritos(List<Viewer> inscritos) {
+        this.inscritos = inscritos;
     }
 
-    //To String
+    // Método toString
     @Override
     public String toString() {
-    
-        return this.nickname + 
-        "\n Número de inscritos: " + this.totalInscritos + "\n";
+        return "\n# Nickname: " + this.nickname + "\n# Número de inscritos: "  + this.totalInscritos + "\n";
     }
-    
 }
